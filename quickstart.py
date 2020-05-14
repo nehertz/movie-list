@@ -1,3 +1,5 @@
+# TODO: https://www.omdbapi.com/
+
 # BEGIN BOILERPLATE IMPORTS
 from __future__ import print_function
 import pickle
@@ -15,7 +17,7 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 SPREADSHEET_ID = '1tDm6_NIbAHz4-2dmZ3-FQjXwXa28WyNP8gHRzt0qTuk'
 RANGE_NAME = 'Sheet1'
 
-def main():
+def get_sheet_values():
     """Shows basic usage of the Sheets API.
     Prints values from a sample spreadsheet.
     """
@@ -43,18 +45,17 @@ def main():
     # Call the Sheets API
     sheet = service.spreadsheets()
     result = sheet.values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
-    values = result.get('values', [])
-    print(sheet)
+    return result.get('values', [])
+# END BOILERPLATE CODE
+
+def main():
+    values = get_sheet_values()
 
     if not values:
-        print('No data found.')
+        print('ERROR: No data found.')
     else:
-        # print('Name, Major:')
-        # print(title)
         for row in values:
-            # Print columns A and E, which correspond to indices 0 and 4.
-            print(row[0], row[1])
-# END BOILERPLATE CODE
+            print(row[0], row[1], row[2])
 
 if __name__ == '__main__':
     main()
