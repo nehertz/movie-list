@@ -1,5 +1,3 @@
-# TODO: https://www.omdbapi.com/
-
 # BEGIN BOILERPLATE IMPORTS
 from __future__ import print_function
 import pickle
@@ -8,6 +6,10 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 # END BOILERPLATE IMPORTS
+import requests
+import json
+
+OMDB_API_KEY = "6e0fcdd6"
 
 # BEGIN BOILERPLATE CODE
 # If modifying these scopes, delete the file token.pickle.
@@ -48,6 +50,15 @@ def get_sheet_values():
     return result.get('values', [])
 # END BOILERPLATE CODE
 
+def get_movie_data(title):
+    url = "http://www.omdbapi.com/?apikey={}&t={}".format(OMDB_API_KEY, title)
+    req = requests.get(url)
+    data = json.loads(str(req.content))
+    try:
+        print(data["Title"])
+    except KeyError:
+        print('Movie "{}" not found'.format(title))
+
 def main():
     values = get_sheet_values()
 
@@ -55,7 +66,8 @@ def main():
         print('ERROR: No data found.')
     else:
         for row in values:
-            print(row[0], row[1], row[2])
+            # print(row[0], row[1], row[2])
+            get_movie_data(row[1])
 
 if __name__ == '__main__':
     main()
